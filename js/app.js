@@ -58,6 +58,106 @@ const locations = [
       "Cleaner air along one of the district's main avenues."
     ],
     images: ["calledevelazquez.png"]
+  },
+  {
+    id: "serrano",
+    name: "Calle de Serrano",
+    subtitle: "Green Commercial Corridor",
+    lat: 40.4280,
+    lng: -3.6865,
+    summary:
+      "Salamanca's flagship shopping avenue transformed into a greener, pedestrian-friendly corridor with wider sidewalks, shaded seating and protected cycling.",
+    changes: [
+      "One vehicle lane removed and replaced with a multi-use urban corridor.",
+      "Continuous tree cover and green infrastructure along the avenue.",
+      "Shaded seating areas and small exercise spaces for elderly residents."
+    ],
+    benefits: [
+      "A stronger retail environment with more foot traffic.",
+      "Improved walking experience for residents and visitors.",
+      "Cooler, greener microclimate during summer months."
+    ],
+    images: ["calledeserrano.png"]
+  },
+  {
+    id: "principe-de-vergara",
+    name: "Príncipe de Vergara",
+    subtitle: "Central Public Corridor",
+    lat: 40.4310,
+    lng: -3.6755,
+    summary:
+      "Príncipe de Vergara reorganized with a central public corridor featuring vegetation, exercise areas and cycling infrastructure, while keeping traffic lanes on both sides.",
+    changes: [
+      "Central corridor created with vegetation, pedestrian resting areas and cycling lanes.",
+      "Traffic lanes maintained on both sides for vehicle circulation.",
+      "New exercise and recreation areas integrated into the central strip."
+    ],
+    benefits: [
+      "A new linear public space for residents to walk, rest and exercise.",
+      "Improved cycling connections through the district.",
+      "Better balance between vehicle circulation and public life."
+    ],
+    images: ["calledeprincipedevergara.png"]
+  },
+  {
+    id: "columela",
+    name: "Calle de Columela",
+    subtitle: "Neighborhood Living Street",
+    lat: 40.4240,
+    lng: -3.6815,
+    summary:
+      "A quieter residential street with traffic calming, expanded sidewalks and new greenery, designed to prioritize families and local life.",
+    changes: [
+      "One parking row replaced with trees, planters and wider pedestrian space.",
+      "Traffic calming measures including lower speed limits.",
+      "New benches and resting areas for residents."
+    ],
+    benefits: [
+      "A calmer, greener street for everyday life.",
+      "Safer environment for children and elderly residents.",
+      "Stronger sense of neighborhood identity."
+    ],
+    images: ["calledecolumela.png"]
+  },
+  {
+    id: "manuel-becerra",
+    name: "Plaza Manuel Becerra",
+    subtitle: "Innovation Roundabout",
+    lat: 40.4285,
+    lng: -3.6690,
+    summary:
+      "The Manuel Becerra roundabout reimagined as a mini urban park dedicated to innovation, with green infrastructure, public seating and space for exhibitions and events.",
+    changes: [
+      "Roundabout interior redesigned as an accessible green public space.",
+      "Tensile canopy structures providing shade and visual identity.",
+      "Flexible event space for startup exhibitions and community gatherings."
+    ],
+    benefits: [
+      "A new landmark for Salamanca connecting urban life with innovation.",
+      "More green space and shade in a high-traffic area.",
+      "A destination that attracts visitors and activates the surrounding streets."
+    ],
+    images: ["roundabouts.png"]
+  },
+  {
+    id: "marques-de-salamanca",
+    name: "Plaza Marqués de Salamanca",
+    subtitle: "Innovation Roundabout",
+    lat: 40.4295,
+    lng: -3.6815,
+    summary:
+      "The Plaza del Marqués de Salamanca transformed into an urban innovation park with greenery, flexible event space and community gathering areas at the heart of the district.",
+    changes: [
+      "Roundabout center converted into a landscaped public space.",
+      "New seating, green infrastructure and pedestrian pathways.",
+      "Space for temporary installations, markets and public events."
+    ],
+    benefits: [
+      "A symbolic public space at the heart of the Salamanca district.",
+      "Increased social interaction and community identity.",
+      "A showcase for Madrid's commitment to urban innovation."
+    ],
+    images: ["roundabouts.png"]
   }
 ];
 
@@ -69,7 +169,7 @@ function initMap() {
   if (!el) return;
 
   map = L.map(el, { zoomControl: false, scrollWheelZoom: true })
-    .setView([40.4260, -3.6800], 15);
+    .setView([40.4275, -3.6785], 15);
 
   L.control.zoom({ position: "bottomright" }).addTo(map);
 
@@ -110,6 +210,11 @@ function initMap() {
       openPanel(loc);
     });
   });
+
+  if (markers.length) {
+    const bounds = markers.map((m) => [m.loc.lat, m.loc.lng]);
+    map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15 });
+  }
 
   map.on("click", (e) => {
     if (e.originalEvent && e.originalEvent.target.closest(".marker-dot")) return;
