@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Salamanca 2030 – Neighborhood Designed for People</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="#home" class="site-header__branding">
+        <img src="madridlogo.png" alt="Ayuntamiento de Madrid" class="site-header__logo" />
+        <span class="site-header__text">
+          <span class="site-header__kicker">Ayuntamiento de Madrid</span>
+          <span class="site-header__title">Salamanca 2030</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="#home" class="site-nav__link">Home</a>
+        <a href="#program" class="site-nav__link">The Program</a>
+        <a href="#map" class="site-nav__link">Interactive Map</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="section section--home">
+      <div class="section__inner section__inner--two-column">
+        <div class="home-hero">
+          <p class="home-hero__eyebrow">Salamanca 2030</p>
+          <h1 class="home-hero__title">
+            Salamanca will become Madrid’s first neighborhood designed for people
+          </h1>
+          <p class="home-hero__subtitle">
+            Cleaner streets, safer spaces for families, and stronger local businesses.
+          </p>
+          <p class="home-hero__meta">
+            A project of the Ayuntamiento de Madrid for the future of the Salamanca district.
+          </p>
+        </div>
+        <aside class="home-intro">
+          <h2 class="h3">A message from the Mayor of Madrid</h2>
+          <p>
+            Salamanca is one of the most vibrant and important districts in Madrid.
+            More than 147,000 residents live in just 5.38 km², making it one of the most
+            densely populated districts in the city.
+          </p>
+          <p>
+            Our goal is simple: a Salamanca where children can play safely, where elderly residents
+            can move easily, where businesses thrive, and where the air we breathe is cleaner.
+            Not by banning cars, but by designing smarter streets that work for everyone.
+          </p>
+        </aside>
+      </div>
+
+      <div class="section__inner section__inner--stack">
+        <h2>The Three Promises</h2>
+        <div class="promises">
+          <article class="promise">
+            <h3>Better Life for Residents</h3>
+            <ul>
+              <li>quieter streets</li>
+              <li>safer neighborhoods</li>
+              <li>more green spaces</li>
+            </ul>
+            <p class="promise__message">
+              “Your neighborhood becomes calmer, greener, and safer.”
+            </p>
+          </article>
+          <article class="promise">
+            <h3>Stronger Local Economy</h3>
+            <ul>
+              <li>more pedestrians = more customers</li>
+            </ul>
+            <p class="promise__message">
+              “More people on the streets means more customers for our local businesses.”
+            </p>
+          </article>
+          <article class="promise">
+            <h3>Mobility for Everyone</h3>
+            <ul>
+              <li>not anti-car — smarter transport</li>
+            </ul>
+            <p class="promise__message">
+              “Residents keep access, but traffic chaos disappears.”
+            </p>
+          </article>
+        </div>
+      </div>
+
+      <div class="section__inner section__inner--stack">
+        <h2>Why change is necessary</h2>
+        <p>
+          In Madrid today, the city has over 3.3 million inhabitants. Dense districts like Salamanca
+          experience constant traffic pressure and public space is dominated by vehicles instead of people.
+        </p>
+        <p>
+          International studies show that redesigning urban streets can significantly improve quality of life.
+          Research on European pedestrianized districts shows that walkable streets increase retail activity
+          and attract more customers to local businesses. Cities like Barcelona have demonstrated that reducing
+          car dominance in residential areas can improve air quality, physical activity, public health and
+          social interaction.
+        </p>
+        <p>
+          Salamanca has the opportunity to become Madrid’s first circular mobility neighborhood, combining better
+          mobility, stronger commerce, greener streets and healthier living conditions.
+        </p>
+      </div>
+
+      <div class="section__inner section__inner--stack">
+        <h2>Our Vision</h2>
+        <p>
+          Salamanca will become Madrid’s first Circular Mobility District – a district where residents move easily,
+          businesses attract more customers, public spaces belong to people and mobility is cleaner and smarter,
+          without eliminating access for residents or essential services.
+        </p>
+        <h3 class="h3">What Salamanca Could Look Like</h3>
+        <ul>
+          <li>tree-lined streets where families walk safely</li>
+          <li>local markets and terraces full of life</li>
+          <li>elderly residents moving easily with neighborhood minibuses</li>
+          <li>quieter evenings and cleaner air</li>
+        </ul>
+        <p>
+          Imagine walking through Salamanca on a Sunday morning. Children playing in safe streets,
+          local markets full of life, cafés with terraces full of people, and cleaner air for everyone.
+          That is the Salamanca we want to build together.
+        </p>
+        <div class="home-cta">
+          <a href="#program" class="button">See the program</a>
+          <a href="#map" class="button button--ghost">Explore the interactive map</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="program" class="section section--program">
+      <div class="section__inner section__inner--stack">
+        <h2>Our Plan for Salamanca 2030</h2>
+        <p>
+          This transformation will be implemented through a series of coordinated measures
+          designed to improve mobility, public space and economic vitality.
+        </p>
+
+        <div class="measures">
+          <article class="measure">
+            <h3>Measure 1 – Resident Priority Access System</h3>
+            <p>
+              Vehicle access in residential streets will prioritize residents, emergency services,
+              deliveries, taxis and mobility services. Through-traffic will be redirected to perimeter
+              avenues, reducing congestion while preserving essential access.
+            </p>
+          </article>
+
+          <article class="measure">
+            <h3>Measure 2 – One-Side Parking Strategy</h3>
+            <p>
+              Many streets currently have parking on both sides. Under the new plan, one side remains
+              parking while the other becomes space for bike lanes, trees and greenery, and wider sidewalks.
+            </p>
+          </article>
+
+          <article class="measure">
+            <h3>Measure 3 – Salamanca Electric Mini-Bus Network</h3>
+            <p>
+              A network of small electric minibuses will circulate inside the district, connecting
+              residential streets, metro stations, major commercial areas and external parking hubs.
+            </p>
+          </article>
+
+          <article class="measure">
+            <h3>Measure 4 – External Parking Hubs Near M-30</h3>
+            <p>
+              Visitors arriving by car will be encouraged to park outside the district in secure facilities
+              near the M-30, linked directly to public transport and mini-bus services into Salamanca.
+            </p>
+          </article>
+
+          <article class="measure">
+            <h3>Measure 5 – Bike Network Expansion</h3>
+            <p>
+              Protected bike lanes will be installed on selected streets, offering a fast and clean
+              alternative for short urban trips and supporting a shift away from car dependency.
+            </p>
+          </article>
+
+          <article class="measure">
+            <h3>Measure 6 – Greener Streets</h3>
+            <p>
+              Space recovered from traffic will be used to create tree-lined streets, shaded walking areas,
+              small green plazas and benches, helping to reduce the urban heat island effect.
+            </p>
+          </article>
+
+          <article class="measure">
+            <h3>Measure 7 – Safe Streets for Families</h3>
+            <p>
+              Streets will adopt traffic calming measures including lower speed limits, redesigned intersections
+              and safer pedestrian crossings, making daily life easier for families and elderly residents.
+            </p>
+          </article>
+
+          <article class="measure">
+            <h3>Measure 8 – Monthly Salamanca Market</h3>
+            <p>
+              Once per month, selected streets will host a Sunday neighborhood market supporting local
+              entrepreneurs, small businesses and cultural activities.
+            </p>
+          </article>
+
+          <article class="measure">
+            <h3>Measure 9 – Smart Traffic Management</h3>
+            <p>
+              AI-assisted traffic lights on perimeter roads will improve traffic flow and reduce congestion
+              by analyzing real-time patterns to optimize circulation.
+            </p>
+          </article>
+        </div>
+
+        <div class="program-meta">
+          <h3>Implementation Timeline</h3>
+          <ol>
+            <li>Phase 1 – Pilot projects and street redesign trials.</li>
+            <li>Phase 2 – Expansion of mobility infrastructure.</li>
+            <li>Phase 3 – Full district implementation.</li>
+            <li>Phase 4 – Evaluation and potential expansion to other districts.</li>
+          </ol>
+
+          <h3>Funding</h3>
+          <p>
+            The project will combine Madrid municipal investment, European funding programs such as
+            the European Regional Development Fund (ERDF), and partnerships with private mobility and
+            parking operators.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="map" class="section section--map">
+      <div class="section__inner section__inner--stack">
+        <h2>Explore the Future of Salamanca</h2>
+        <p>
+          Each point on the map represents a planned intervention. Click a location to see visual
+          renderings of the redesigned space, an explanation of the changes and the expected benefits.
+        </p>
+      </div>
+      <div class="map-wrapper">
+        <div id="map" aria-label="Map of Salamanca 2030 interventions"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="location-modal" role="dialog" aria-modal="true" aria-labelledby="location-modal-title" aria-describedby="location-modal-description" hidden>
+    <div class="modal__backdrop" data-modal-close></div>
+    <div class="modal__dialog">
+      <button class="modal__close" type="button" data-modal-close aria-label="Close details">&times;</button>
+      <h2 id="location-modal-title"></h2>
+      <p id="location-modal-summary" class="modal__summary"></p>
+      <div id="location-modal-description" class="modal__columns">
+        <div class="modal__column">
+          <h3>Changes</h3>
+          <ul id="location-modal-changes"></ul>
+        </div>
+        <div class="modal__column">
+          <h3>Benefits</h3>
+          <ul id="location-modal-benefits"></ul>
+        </div>
+      </div>
+      <div class="modal__images" id="location-modal-images" aria-label="Street renderings"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>Salamanca 2030 – Ayuntamiento de Madrid</p>
+    </div>
+  </footer>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
+
