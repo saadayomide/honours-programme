@@ -278,13 +278,32 @@ h3 {
   margin: 0 auto 3rem;
   border-radius: 0.9rem;
   overflow: hidden;
-  box-shadow: 0 6px 25px rgba(15, 23, 42, 0.15);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
 }
 
 #map {
   width: 100%;
   height: 70vh;
   min-height: 380px;
+}
+
+.map-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background-color: #ffffff;
+  border: 1px solid #d0d7e2;
+  font-size: 0.85rem;
+  color: #555f6a;
+}
+
+.map-legend__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background-color: #005ea5;
 }
 
 .site-footer {

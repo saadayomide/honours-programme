@@ -1,4 +1,5 @@
 let lastFocusedElement = null;
+let mapInstance = null;
 
 const salamancaData = {
   coreMessage:
@@ -70,7 +71,7 @@ function initMap() {
   const mapElement = document.getElementById("map");
   if (!mapElement) return;
 
-  const map = L.map(mapElement).setView(
+  mapInstance = L.map(mapElement).setView(
     salamancaData.mapCenter,
     salamancaData.mapZoom
   );
@@ -82,12 +83,24 @@ function initMap() {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
     }
-  ).addTo(map);
+  ).addTo(mapInstance);
+
+  const bounds = [];
 
   salamancaData.locations.forEach((location) => {
-    const marker = L.marker([location.lat, location.lng]).addTo(map);
-    marker.on("click", () => openLocationModal(location));
+    const marker = L.marker([location.lat, location.lng]).addTo(mapInstance);
+    bounds.push([location.lat, location.lng]);
+    marker.on("click", () => {
+      if (mapInstance) {
+        mapInstance.panTo([location.lat, location.lng], { animate: true });
+      }
+      openLocationModal(location);
+    });
   });
+
+  if (bounds.length && mapInstance) {
+    mapInstance.fitBounds(bounds, { padding: [80, 80] });
+  }
 }
 
 function getFocusableElements(container) {
