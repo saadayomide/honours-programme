@@ -3,8 +3,8 @@ const locations = [
     id: "jorge-juan",
     name: "Calle de Jorge Juan",
     subtitle: "Green Street & Sunday Market",
-    lat: 40.4233,
-    lng: -3.6769,
+    lat: 40.42265,
+    lng: -3.68020,
     summary:
       "A calmer Jorge Juan with wider sidewalks, continuous tree cover and a monthly neighborhood market that brings life to the street.",
     changes: [
@@ -23,8 +23,8 @@ const locations = [
     id: "hermosilla",
     name: "Calle de Hermosilla",
     subtitle: "Safe Family Street",
-    lat: 40.4264,
-    lng: -3.6780,
+    lat: 40.42505,
+    lng: -3.68050,
     summary:
       "A residential street redesigned with one-side parking, a protected bike lane, trees and safe pedestrian crossings.",
     changes: [
@@ -43,8 +43,8 @@ const locations = [
     id: "velazquez",
     name: "Calle de Velázquez",
     subtitle: "Smart Mobility Corridor",
-    lat: 40.4290,
-    lng: -3.6840,
+    lat: 40.42650,
+    lng: -3.68370,
     summary:
       "A key north–south corridor reorganized with resident-priority access, improved cycling connections and smart traffic signals.",
     changes: [
@@ -63,8 +63,8 @@ const locations = [
     id: "serrano",
     name: "Calle de Serrano",
     subtitle: "Green Commercial Corridor",
-    lat: 40.4280,
-    lng: -3.6865,
+    lat: 40.42750,
+    lng: -3.68880,
     summary:
       "Salamanca's flagship shopping avenue transformed into a greener, pedestrian-friendly corridor with wider sidewalks, shaded seating and protected cycling.",
     changes: [
@@ -83,8 +83,8 @@ const locations = [
     id: "principe-de-vergara",
     name: "Príncipe de Vergara",
     subtitle: "Central Public Corridor",
-    lat: 40.4310,
-    lng: -3.6755,
+    lat: 40.42850,
+    lng: -3.67720,
     summary:
       "Príncipe de Vergara reorganized with a central public corridor featuring vegetation, exercise areas and cycling infrastructure, while keeping traffic lanes on both sides.",
     changes: [
@@ -103,8 +103,8 @@ const locations = [
     id: "columela",
     name: "Calle de Columela",
     subtitle: "Neighborhood Living Street",
-    lat: 40.4240,
-    lng: -3.6815,
+    lat: 40.42330,
+    lng: -3.68480,
     summary:
       "A quieter residential street with traffic calming, expanded sidewalks and new greenery, designed to prioritize families and local life.",
     changes: [
@@ -123,8 +123,8 @@ const locations = [
     id: "manuel-becerra",
     name: "Plaza Manuel Becerra",
     subtitle: "Innovation Roundabout",
-    lat: 40.4285,
-    lng: -3.6690,
+    lat: 40.42760,
+    lng: -3.66850,
     summary:
       "The Manuel Becerra roundabout reimagined as a mini urban park dedicated to innovation, with green infrastructure, public seating and space for exhibitions and events.",
     changes: [
@@ -143,8 +143,8 @@ const locations = [
     id: "marques-de-salamanca",
     name: "Plaza Marqués de Salamanca",
     subtitle: "Innovation Roundabout",
-    lat: 40.4295,
-    lng: -3.6815,
+    lat: 40.42986,
+    lng: -3.68004,
     summary:
       "The Plaza del Marqués de Salamanca transformed into an urban innovation park with greenery, flexible event space and community gathering areas at the heart of the district.",
     changes: [
@@ -162,15 +162,24 @@ const locations = [
 ];
 
 let map = null;
-let activeMarker = null;
-let markerJustClicked = false;
+let activeDot = null;
+
+function createIcon(name) {
+  return L.divIcon({
+    className: "marker-wrapper",
+    html: '<div class="marker-dot" data-name="' + name + '"></div>' +
+          '<div class="marker-label">' + name + '</div>',
+    iconSize: [20, 20],
+    iconAnchor: [10, 10]
+  });
+}
 
 function initMap() {
-  const el = document.getElementById("map");
+  var el = document.getElementById("map");
   if (!el) return;
 
   map = L.map(el, { zoomControl: false, scrollWheelZoom: true })
-    .setView([40.4275, -3.6785], 15);
+    .setView([40.4265, -3.6800], 15);
 
   L.control.zoom({ position: "bottomright" }).addTo(map);
 
@@ -183,45 +192,35 @@ function initMap() {
     }
   ).addTo(map);
 
-  const markers = [];
+  var allMarkers = [];
 
-  locations.forEach((loc) => {
-    const icon = L.divIcon({
-      className: "",
-      html:
-        '<div class="marker-dot"></div>' +
-        '<div class="marker-tooltip">' + loc.name + "</div>",
-      iconSize: [16, 16],
-      iconAnchor: [8, 8]
-    });
+  locations.forEach(function (loc) {
+    var marker = L.marker([loc.lat, loc.lng], { icon: createIcon(loc.name) }).addTo(map);
+    allMarkers.push({ marker: marker, loc: loc });
 
-    const marker = L.marker([loc.lat, loc.lng], { icon: icon }).addTo(map);
-    markers.push({ marker, loc });
+    marker.on("click", function () {
+      if (activeDot) activeDot.classList.remove("active");
 
-    marker.on("click", () => {
-      markerJustClicked = true;
-      setTimeout(() => { markerJustClicked = false; }, 100);
-
-      if (activeMarker) {
-        const prevDot = activeMarker.getElement().querySelector(".marker-dot");
-        if (prevDot) prevDot.classList.remove("active");
+      var dot = marker.getElement().querySelector(".marker-dot");
+      if (dot) {
+        dot.classList.add("active");
+        activeDot = dot;
       }
-      activeMarker = marker;
-      const dot = marker.getElement().querySelector(".marker-dot");
-      if (dot) dot.classList.add("active");
 
       map.flyTo([loc.lat, loc.lng], 16, { duration: 0.5 });
       openPanel(loc);
     });
   });
 
-  if (markers.length) {
-    const bounds = markers.map((m) => [m.loc.lat, m.loc.lng]);
-    map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15 });
+  if (allMarkers.length) {
+    var bounds = allMarkers.map(function (m) { return [m.loc.lat, m.loc.lng]; });
+    map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
   }
 
-  map.on("click", () => {
-    if (markerJustClicked) return;
+  el.addEventListener("click", function (e) {
+    if (e.target.closest(".marker-wrapper")) return;
+    if (e.target.closest(".leaflet-control-container")) return;
+    if (e.target.closest(".panel")) return;
     closePanel();
   });
 }
@@ -233,7 +232,7 @@ function openPanel(loc) {
 
   const changesEl = document.getElementById("panel-changes");
   changesEl.innerHTML = "";
-  loc.changes.forEach((t) => {
+  loc.changes.forEach(function (t) {
     const li = document.createElement("li");
     li.textContent = t;
     changesEl.appendChild(li);
@@ -241,7 +240,7 @@ function openPanel(loc) {
 
   const benefitsEl = document.getElementById("panel-benefits");
   benefitsEl.innerHTML = "";
-  loc.benefits.forEach((t) => {
+  loc.benefits.forEach(function (t) {
     const li = document.createElement("li");
     li.textContent = t;
     benefitsEl.appendChild(li);
@@ -249,7 +248,7 @@ function openPanel(loc) {
 
   const imagesEl = document.getElementById("panel-images");
   imagesEl.innerHTML = "";
-  loc.images.forEach((src) => {
+  loc.images.forEach(function (src) {
     const img = document.createElement("img");
     img.src = src;
     img.alt = loc.name + " — reimagined";
@@ -262,10 +261,9 @@ function openPanel(loc) {
 
 function closePanel() {
   document.getElementById("panel").classList.remove("open");
-  if (activeMarker) {
-    const dot = activeMarker.getElement().querySelector(".marker-dot");
-    if (dot) dot.classList.remove("active");
-    activeMarker = null;
+  if (activeDot) {
+    activeDot.classList.remove("active");
+    activeDot = null;
   }
 }
 
@@ -274,25 +272,25 @@ function initNavHighlight() {
   const sections = document.querySelectorAll("#home, #program, #map-section");
 
   const obs = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
+    function (entries) {
+      entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        links.forEach((a) => {
-          const match = a.getAttribute("href") === "#" + entry.target.id;
+        links.forEach(function (a) {
+          var match = a.getAttribute("href") === "#" + entry.target.id;
           a.classList.toggle("active", match);
         });
       });
     },
     { rootMargin: "-40% 0px -55% 0px" }
   );
-  sections.forEach((s) => obs.observe(s));
+  sections.forEach(function (s) { obs.observe(s); });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
   initMap();
   initNavHighlight();
   document.getElementById("panel-close").addEventListener("click", closePanel);
-  document.addEventListener("keydown", (e) => {
+  document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") closePanel();
   });
 });
