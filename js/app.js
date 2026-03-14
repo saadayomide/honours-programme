@@ -163,6 +163,7 @@ const locations = [
 
 let map = null;
 let activeMarker = null;
+let markerJustClicked = false;
 
 function initMap() {
   const el = document.getElementById("map");
@@ -198,6 +199,9 @@ function initMap() {
     markers.push({ marker, loc });
 
     marker.on("click", () => {
+      markerJustClicked = true;
+      setTimeout(() => { markerJustClicked = false; }, 100);
+
       if (activeMarker) {
         const prevDot = activeMarker.getElement().querySelector(".marker-dot");
         if (prevDot) prevDot.classList.remove("active");
@@ -216,8 +220,8 @@ function initMap() {
     map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15 });
   }
 
-  map.on("click", (e) => {
-    if (e.originalEvent && e.originalEvent.target.closest(".marker-dot")) return;
+  map.on("click", () => {
+    if (markerJustClicked) return;
     closePanel();
   });
 }
