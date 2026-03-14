@@ -1,6 +1,13 @@
 let lastFocusedElement = null;
 let mapInstance = null;
 
+const markerIcon = L.icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  iconSize: [20, 32],
+  iconAnchor: [10, 32],
+  popupAnchor: [0, -28]
+});
+
 const salamancaData = {
   coreMessage:
     "Salamanca will become Madrid’s first neighborhood designed for people — cleaner streets, safer spaces for families, and stronger local businesses.",
@@ -88,11 +95,11 @@ function initMap() {
   const bounds = [];
 
   salamancaData.locations.forEach((location) => {
-    const marker = L.marker([location.lat, location.lng]).addTo(mapInstance);
+    const marker = L.marker([location.lat, location.lng], { icon: markerIcon }).addTo(mapInstance);
     bounds.push([location.lat, location.lng]);
     marker.on("click", () => {
       if (mapInstance) {
-        mapInstance.panTo([location.lat, location.lng], { animate: true });
+        mapInstance.panTo([location.lat, location.lng], { animate: true, duration: 0.4 });
       }
       openLocationModal(location);
     });
