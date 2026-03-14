@@ -1,230 +1,244 @@
-let lastFocusedElement = null;
-let mapInstance = null;
-
-const markerIcon = L.icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconSize: [20, 32],
-  iconAnchor: [10, 32],
-  popupAnchor: [0, -28]
-});
-
 const salamancaData = {
-  coreMessage:
-    "Salamanca will become Madrid’s first neighborhood designed for people — cleaner streets, safer spaces for families, and stronger local businesses.",
   mapCenter: [40.42972, -3.67975],
   mapZoom: 15,
   locations: [
     {
       id: "jorge-juan-street",
-      name: "Calle de Jorge Juan – Green Street & Market",
-      lat: 40.423361,
-      lng: -3.6769042,
+      name: "Calle de Jorge Juan",
+      subtitle: "Green Street & Sunday Market",
+      lat: 40.4233,
+      lng: -3.6769,
       summary:
-        "A calmer Jorge Juan with wider sidewalks, trees and a monthly neighborhood market.",
+        "A calmer Jorge Juan with wider sidewalks, continuous tree cover and a monthly neighborhood market that brings life to the street.",
       changes: [
-        "Parking on one side only to free space for trees and pedestrians.",
-        "Street designed to host the Monthly Salamanca Market once a month.",
-        "Traffic calming to prioritize residents and local visitors."
+        "One parking row removed — replaced with trees, planters and shaded benches.",
+        "Street designed to host the Monthly Salamanca Market on Sundays.",
+        "Traffic calming measures prioritize residents and pedestrians."
       ],
       benefits: [
         "Quieter, greener environment for residents.",
-        "More customers for local shops and cafés.",
-        "A new social meeting point for the neighborhood."
+        "More foot traffic and customers for local shops and cafés.",
+        "A new social gathering point for the neighborhood."
       ],
       images: ["calledejorjejuan.png", "calledejorgejuanmercado.png"]
     },
     {
       id: "hermosilla-street",
-      name: "Calle de Hermosilla – Safe Family Street",
-      lat: 40.426361,
-      lng: -3.684617,
+      name: "Calle de Hermosilla",
+      subtitle: "Safe Family Street",
+      lat: 40.4264,
+      lng: -3.6780,
       summary:
-        "A residential street redesigned with one-side parking, trees and safe crossings.",
+        "A residential street redesigned with one-side parking, a protected bike lane, trees and safe pedestrian crossings.",
       changes: [
         "Protected bike lane and wider sidewalks for everyday trips.",
-        "New trees and benches to create shaded walking routes.",
-        "Traffic calming and safer crossings for children and elderly residents."
+        "New trees and benches creating shaded walking routes.",
+        "Redesigned crossings for children and elderly residents."
       ],
       benefits: [
         "Safer daily routes to school and local shops.",
-        "More active mobility and less noise.",
-        "More pleasant public space right outside residents’ doors."
+        "More active mobility and significantly less noise.",
+        "Pleasant public space right outside residents' doors."
       ],
       images: ["calledehermosilla.png"]
     },
     {
       id: "velazquez-street",
-      name: "Calle de Velázquez – Smart Mobility Corridor",
-      lat: 40.4268995,
-      lng: -3.6839794,
+      name: "Calle de Velázquez",
+      subtitle: "Smart Mobility Corridor",
+      lat: 40.4290,
+      lng: -3.6840,
       summary:
-        "A key north–south corridor with organized traffic and priority for public transport and bikes.",
+        "A key north–south corridor reorganized with resident-priority access, improved cycling connections and smart traffic signals.",
       changes: [
-        "Resident priority access on side streets, with through-traffic kept to main axes.",
-        "Improved cycling connections along the corridor.",
-        "Smart traffic management on intersections to reduce congestion."
+        "One vehicle lane converted into a multi-use corridor with greenery and cycling.",
+        "Resident priority access on side streets — through-traffic redirected.",
+        "AI-assisted traffic management at key intersections."
       ],
       benefits: [
-        "More predictable, less chaotic traffic.",
+        "More predictable, less chaotic traffic flow.",
         "Faster and more reliable public transport.",
-        "Cleaner air along one of the district’s main avenues."
+        "Cleaner air along one of the district's main avenues."
       ],
       images: ["calledevelazquez.png"]
     }
   ]
 };
 
-function initMap() {
-  const mapElement = document.getElementById("map");
-  if (!mapElement) return;
+let mapInstance = null;
+let activeMarkerEl = null;
 
-  mapInstance = L.map(mapElement).setView(
-    salamancaData.mapCenter,
-    salamancaData.mapZoom
-  );
+function createMarkerIcon() {
+  return L.divIcon({
+    className: "",
+    html: '<div class="marker-dot"></div><div class="marker-label"></div>',
+    iconSize: [18, 18],
+    iconAnchor: [9, 9]
+  });
+}
+
+function setMarkerLabel(marker, text) {
+  const label = marker.getElement().querySelector(".marker-label");
+  if (label) label.textContent = text;
+}
+
+function setMarkerActive(marker, active) {
+  const dot = marker.getElement().querySelector(".marker-dot");
+  if (!dot) return;
+  if (active) {
+    dot.classList.add("active");
+  } else {
+    dot.classList.remove("active");
+  }
+}
+
+function initMap() {
+  const el = document.getElementById("map");
+  if (!el) return;
+
+  mapInstance = L.map(el, {
+    zoomControl: false,
+    scrollWheelZoom: true
+  }).setView(salamancaData.mapCenter, salamancaData.mapZoom);
+
+  L.control.zoom({ position: "bottomright" }).addTo(mapInstance);
 
   L.tileLayer(
-    "https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png",
+    "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
     {
       maxZoom: 19,
       attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
     }
   ).addTo(mapInstance);
 
   const bounds = [];
 
-  salamancaData.locations.forEach((location) => {
-    const marker = L.marker([location.lat, location.lng], { icon: markerIcon }).addTo(mapInstance);
-    bounds.push([location.lat, location.lng]);
+  salamancaData.locations.forEach((loc) => {
+    const marker = L.marker([loc.lat, loc.lng], { icon: createMarkerIcon() }).addTo(mapInstance);
+    bounds.push([loc.lat, loc.lng]);
+
+    marker.once("add", () => {
+      setMarkerLabel(marker, loc.name);
+    });
+
     marker.on("click", () => {
-      if (mapInstance) {
-        mapInstance.panTo([location.lat, location.lng], { animate: true, duration: 0.4 });
-      }
-      openLocationModal(location);
+      if (activeMarkerEl) setMarkerActive(activeMarkerEl, false);
+      activeMarkerEl = marker;
+      setMarkerActive(marker, true);
+
+      mapInstance.flyTo([loc.lat, loc.lng], 16, { duration: 0.6 });
+      openPanel(loc);
     });
   });
 
-  if (bounds.length && mapInstance) {
-    mapInstance.fitBounds(bounds, { padding: [80, 80] });
-  }
-}
-
-function getFocusableElements(container) {
-  return Array.from(
-    container.querySelectorAll(
-      'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
-    )
-  ).filter((el) => !el.hasAttribute("disabled") && !el.getAttribute("aria-hidden"));
-}
-
-function openLocationModal(location) {
-  const modal = document.getElementById("location-modal");
-  const titleEl = document.getElementById("location-modal-title");
-  const summaryEl = document.getElementById("location-modal-summary");
-  const changesEl = document.getElementById("location-modal-changes");
-  const benefitsEl = document.getElementById("location-modal-benefits");
-  const imagesEl = document.getElementById("location-modal-images");
-
-  if (
-    !modal ||
-    !titleEl ||
-    !summaryEl ||
-    !changesEl ||
-    !benefitsEl ||
-    !imagesEl
-  ) {
-    return;
+  if (bounds.length) {
+    mapInstance.fitBounds(bounds, { padding: [60, 60], maxZoom: 16 });
   }
 
-  lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  mapInstance.on("click", (e) => {
+    if (e.originalEvent.target.closest(".marker-dot")) return;
+    closePanel();
+  });
+}
 
-  titleEl.textContent = location.name;
-  summaryEl.textContent = location.summary;
+function openPanel(loc) {
+  const panel = document.getElementById("panel");
+  const title = document.getElementById("panel-title");
+  const summary = document.getElementById("panel-summary");
+  const changes = document.getElementById("panel-changes");
+  const benefits = document.getElementById("panel-benefits");
+  const images = document.getElementById("panel-images");
 
-  changesEl.innerHTML = "";
-  location.changes.forEach((item) => {
+  title.textContent = loc.name + " — " + loc.subtitle;
+  summary.textContent = loc.summary;
+
+  changes.innerHTML = "";
+  loc.changes.forEach((t) => {
     const li = document.createElement("li");
-    li.textContent = item;
-    changesEl.appendChild(li);
+    li.textContent = t;
+    changes.appendChild(li);
   });
 
-  benefitsEl.innerHTML = "";
-  location.benefits.forEach((item) => {
+  benefits.innerHTML = "";
+  loc.benefits.forEach((t) => {
     const li = document.createElement("li");
-    li.textContent = item;
-    benefitsEl.appendChild(li);
+    li.textContent = t;
+    benefits.appendChild(li);
   });
 
-  imagesEl.innerHTML = "";
-  location.images.forEach((src) => {
+  images.innerHTML = "";
+  loc.images.forEach((src) => {
     const img = document.createElement("img");
     img.src = src;
-    img.alt = location.name;
-    imagesEl.appendChild(img);
+    img.alt = loc.name + " — reimagined";
+    img.loading = "lazy";
+    images.appendChild(img);
   });
 
-  modal.hidden = false;
-  const dialog = modal.querySelector(".modal__dialog");
-  if (dialog) {
-    dialog.setAttribute("tabindex", "-1");
-    dialog.focus();
+  panel.classList.add("open");
+}
+
+function closePanel() {
+  const panel = document.getElementById("panel");
+  panel.classList.remove("open");
+  if (activeMarkerEl) {
+    setMarkerActive(activeMarkerEl, false);
+    activeMarkerEl = null;
   }
 }
 
-function closeLocationModal() {
-  const modal = document.getElementById("location-modal");
-  if (!modal) return;
-  modal.hidden = true;
-  if (lastFocusedElement && document.contains(lastFocusedElement)) {
-    lastFocusedElement.focus();
-  }
+function initPanelEvents() {
+  document.getElementById("panel-close").addEventListener("click", closePanel);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closePanel();
+  });
 }
 
-function bindModalEvents() {
-  const modal = document.getElementById("location-modal");
-  if (!modal) return;
+function initScrollAnimations() {
+  const targets = document.querySelectorAll(".card, .timeline, .vision-block, .prose, .hero__content, .hero__grid > aside");
+  targets.forEach((el) => el.classList.add("fade-up"));
 
-  modal.addEventListener("click", (event) => {
-    const target = event.target;
-    if (!(target instanceof HTMLElement)) return;
-    if (target.dataset.modalClose !== undefined) {
-      closeLocationModal();
-    }
-  });
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12 }
+  );
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      closeLocationModal();
-      return;
-    }
+  targets.forEach((el) => observer.observe(el));
+}
 
-    if (modal.hidden) return;
-    if (event.key !== "Tab") return;
+function initNavHighlight() {
+  const links = document.querySelectorAll("[data-nav]");
+  const sections = document.querySelectorAll("#home, #program, #map-section");
 
-    const dialog = modal.querySelector(".modal__dialog");
-    if (!dialog) return;
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const id = entry.target.id;
+        links.forEach((link) => {
+          const href = link.getAttribute("href").replace("#", "");
+          const match = href === id || (href === "map" && id === "map-section");
+          link.classList.toggle("active", match);
+        });
+      });
+    },
+    { rootMargin: "-40% 0px -55% 0px" }
+  );
 
-    const focusable = getFocusableElements(dialog);
-    if (!focusable.length) return;
-
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    const current = document.activeElement;
-    const goingBack = event.shiftKey;
-
-    if (!goingBack && current === last) {
-      event.preventDefault();
-      first.focus();
-    } else if (goingBack && current === first) {
-      event.preventDefault();
-      last.focus();
-    }
-  });
+  sections.forEach((s) => observer.observe(s));
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
-  bindModalEvents();
+  initPanelEvents();
+  initScrollAnimations();
+  initNavHighlight();
 });
-
